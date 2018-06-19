@@ -6,6 +6,8 @@ class HomePage extends StatelessWidget {
   final BaseAuth auth;
   final VoidCallback onSignOut;
 
+  
+
   @override
   Widget build(BuildContext context) {
 

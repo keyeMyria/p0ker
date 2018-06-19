@@ -3,6 +3,8 @@ import 'package:login/auth.dart';
 import 'package:login/login.dart';
 import 'package:login/home_page.dart';
 import 'bottom_nav.dart';
+import 'user_search.dart';
+
 
 
 class RootPage extends StatefulWidget {
@@ -10,7 +12,7 @@ class RootPage extends StatefulWidget {
   final BaseAuth auth;
 
   @override
-  State<StatefulWidget> createState() => new _RootPageState();
+  State<StatefulWidget> createState() => new RootPageState();
 }
 
 enum AuthStatus {
@@ -18,7 +20,9 @@ enum AuthStatus {
   signedIn,
 }
 
-class _RootPageState extends State<RootPage> {
+class RootPageState extends State<RootPage> {
+
+  String currentUser;
 
   AuthStatus authStatus = AuthStatus.notSignedIn;
 
@@ -27,15 +31,21 @@ class _RootPageState extends State<RootPage> {
     widget.auth.currentUser().then((userId) {
       setState(() {
         authStatus = userId != null ? AuthStatus.signedIn : AuthStatus.notSignedIn;
+        currentUser = userId;
+        debugPrint(currentUser);
       });
     });
   }
+
+
 
   void _updateAuthStatus(AuthStatus status) {
     setState(() {
       authStatus = status;
     });
   }
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +57,7 @@ class _RootPageState extends State<RootPage> {
           onSignIn: () => _updateAuthStatus(AuthStatus.signedIn),
         );
       case AuthStatus.signedIn:
-        return new HomePage(
+        return new MyHomePage(
           auth: widget.auth,
           onSignOut: () => _updateAuthStatus(AuthStatus.notSignedIn)
         );

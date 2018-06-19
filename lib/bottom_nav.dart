@@ -1,31 +1,46 @@
 import 'package:flutter/material.dart';
 import 'auth.dart';
-import './Pages/user_search.dart';
+import 'user_search.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+
+import 'package:flutter_search_bar/flutter_search_bar.dart';
+
+
+
+
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({this.auth, this.onSignedOut});
+  MyHomePage({this.auth, this.onSignOut});
   final BaseAuth auth;
-  final VoidCallback onSignedOut;
+  final VoidCallback onSignOut;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  
+
   final Key keyOne = PageStorageKey('pageOne');
   final Key keyTwo = PageStorageKey('pageTwo');
   final Key keyThree = PageStorageKey('pageThree');
+
+  final BaseAuth auth = Auth();
+  
 
   int currentTab = 0;
 
   PageOne one;
   PageTwo two;
-  UserSearch three;
+  DisplaySearch three;
   List<Widget> pages;
   Widget currentPage;
 
   List<Data> dataList;
   final PageStorageBucket bucket = PageStorageBucket();
+
+
 
   @override
   void initState() {
@@ -49,8 +64,10 @@ class _MyHomePageState extends State<MyHomePage> {
       key: keyTwo,
     );
 
-    three = UserSearch(
+    three = DisplaySearch(
       key: keyThree,
+      auth: auth,
+      
     );
 
     pages = [one, two, three];
@@ -63,9 +80,15 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      /*appBar: AppBar(
         title: Text("Persistance Example"),
-      ),
+        actions: <Widget>[
+          new FlatButton(
+              onPressed: _signOut,
+              child: new Text('Logout',
+                  style: new TextStyle(fontSize: 17.0, color: Colors.white))),
+        ],
+      ),*/
       body: PageStorage(
         child: currentPage,
         bucket: bucket,
@@ -170,38 +193,6 @@ class PageTwoState extends State<PageTwo> {
   }
 }
 
-class UserSearch extends StatefulWidget {
-  UserSearch({Key key}) : super(key: key);
-
-  @override
-  UserSearchState createState() => UserSearchState();
-}
-
-String result = "";
-
-class UserSearchState extends State<UserSearch> {
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      body: new Container(
-        padding: EdgeInsets.all(16.0),
-        child: new Column(
-          children: <Widget>[
-            new Text("Søk etter medlemmer", style: new TextStyle(fontSize: 20.0),),
-            new TextField(
-                decoration: InputDecoration(),
-                onSubmitted: (String str) {
-                  setState(() {
-                    result = str;
-                  });
-                }),
-                new Text(result)
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class Data {
   final int id;
@@ -209,3 +200,18 @@ class Data {
   final String title;
   Data(this.id, this.expanded, this.title);
 }
+
+
+
+SearchBar searchBar;
+bool _fresh = false;
+
+AppBar _buildAppBar(BuildContext context) {
+  return new AppBar(
+    title: new Text("Søk etter medlemmer"),
+    actions: <Widget>[
+      searchBar.getSearchAction(context),
+    ],
+  );
+}
+
