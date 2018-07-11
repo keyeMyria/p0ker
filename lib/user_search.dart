@@ -20,11 +20,12 @@ AppBar _buildAppBar(BuildContext context) {
 }
 
 class DisplaySearch extends StatefulWidget {
-  DisplaySearch({Key key, this.auth, this.onSignOut, this.currentUser}) : super(key: key);
+  DisplaySearch({Key key, this.auth, this.onSignOut, this.currentUser})
+      : super(key: key);
   final BaseAuth auth;
   final VoidCallback onSignOut;
   final String currentUser;
-  
+
   @override
   _DisplaySearchState createState() => new _DisplaySearchState();
 }
@@ -35,20 +36,19 @@ class _DisplaySearchState extends State<DisplaySearch> {
   String friendUsername;
   String friendEmail;
   String friendUserId;
-  String searchUser;
+  String searchedUserId;
   String mCurrentUser;
-  
-  
+
   initState() {
     super.initState();
     _getCurrentUser();
   }
-  
-  _getCurrentUser () async {
-  mCurrentUser = await widget.auth.currentUser();
-  print('Hello ' + mCurrentUser);
-}
-    
+
+  _getCurrentUser() async {
+    mCurrentUser = await widget.auth.currentUser();
+    print('Current user: ' + mCurrentUser);
+  }
+
   Widget _buildList(DocumentSnapshot doc) {
     return new ListTile(
       title: new Text(
@@ -92,10 +92,12 @@ class _DisplaySearchState extends State<DisplaySearch> {
                           tooltip: "Legg til i spill",
                           iconSize: 30.0,
                           onPressed: () {
-                            
-                            searchUser = _queryText.toLowerCase();
+                             // Get friend user uid
+                            searchedUserId = document["uid"];
+                            debugPrint(searchedUserId);
+
                             _fetch();
-                            getFriendUserId();
+                            
                           },
                         ),
                         new Divider(),
@@ -119,16 +121,20 @@ class _DisplaySearchState extends State<DisplaySearch> {
       "brukernavn": friendUsername,
       "uid": friendUserId
     };
-    Firestore.instance.document("users/$currentUserId/friends")
-    .setData(data)
-    .whenComplete(() {
-      print("Document Added");
+    Firestore.instance
+        .document("users/$mCurrentUser/friends/$searchedUserId")
+        .setData(data)
+        .whenComplete(() {
+      debugPrint("Document Added");
     }).catchError((e) => print(e));
   }
 
-// Add friend data
- void _fetch() {
-    Firestore.instance.document("users/$currentUserId").get().then((datasnapshot) {
+// get searched user data
+  void _fetch() {
+    Firestore.instance
+        .document("users/$searchedUserId")
+        .get()
+        .then((datasnapshot) {
       if (datasnapshot.exists) {
         setState(() {
           friendUsername = datasnapshot.data["brukernavn"];
@@ -140,26 +146,11 @@ class _DisplaySearchState extends State<DisplaySearch> {
       } else {
         debugPrint(_queryText);
       }
+      
     });
   }
 
-  // Get friend user uid
-  void getFriendUserId() {
-    Firestore.instance
-        .collection("users")
-        .where("brukernavn", isEqualTo: searchUser)
-        .getDocuments()
-        .then((string) {
-          if (string.documents.isEmpty) {
-            debugPrint("document empty!");
-          } else {
-            currentUserId = string.toString();
-            print(currentUserId);
-
-          }
-        });
-  }
-
+  
 
   Widget _fireList() {
     return new Text("");

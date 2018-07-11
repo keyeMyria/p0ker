@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:login/primary_button.dart';
+import 'package:login/widgets/primary_button.dart';
 import 'auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
+
 
 class Login extends StatefulWidget {
   Login({Key key, this.title, this.auth, this.onSignIn, this.currentUser}) : super(key: key);
@@ -51,7 +52,7 @@ class LoginState extends State<Login> {
     return false;
   }
 
-  void start() {}
+  
 
   void validateAndSubmit() async {
     if (validateAndSave()) {

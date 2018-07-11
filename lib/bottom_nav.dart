@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'auth.dart';
 import 'user_search.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'game_page.dart';
 
 
 import 'package:flutter_search_bar/flutter_search_bar.dart';
@@ -32,7 +33,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int currentTab = 0;
 
   PageOne one;
-  PageTwo two;
+  GamePage two;
   DisplaySearch three;
   List<Widget> pages;
   Widget currentPage;
@@ -60,8 +61,9 @@ class _MyHomePageState extends State<MyHomePage> {
       key: keyOne,
       dataList: dataList,
     );
-    two = PageTwo(
+    two = GamePage(
       key: keyTwo,
+      auth: auth,
     );
 
     three = DisplaySearch(
@@ -166,32 +168,7 @@ class PageOneState extends State<PageOne> {
   }
 }
 
-class PageTwo extends StatefulWidget {
-  PageTwo({Key key}) : super(key: key);
 
-  @override
-  PageTwoState createState() => PageTwoState();
-}
-
-class PageTwoState extends State<PageTwo> {
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemExtent: 250.0,
-      itemBuilder: (context, index) => Container(
-            padding: EdgeInsets.all(10.0),
-            child: Material(
-              elevation: 4.0,
-              borderRadius: BorderRadius.circular(5.0),
-              color: index % 2 == 0 ? Colors.cyan : Colors.deepOrange,
-              child: Center(
-                child: Text(index.toString()),
-              ),
-            ),
-          ),
-    );
-  }
-}
 
 
 class Data {
@@ -203,15 +180,5 @@ class Data {
 
 
 
-SearchBar searchBar;
-bool _fresh = false;
 
-AppBar _buildAppBar(BuildContext context) {
-  return new AppBar(
-    title: new Text("Søk etter medlemmer"),
-    actions: <Widget>[
-      searchBar.getSearchAction(context),
-    ],
-  );
-}
 
