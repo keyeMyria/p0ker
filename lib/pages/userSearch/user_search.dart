@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_search_bar/flutter_search_bar.dart';
-import 'dart:async';
-import 'auth.dart';
-import 'root_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+
+import 'package:login/auth.dart';
+
+
 
 SearchBar searchBar;
 bool _fresh = false;
@@ -42,6 +41,15 @@ class _DisplaySearchState extends State<DisplaySearch> {
   initState() {
     super.initState();
     _getCurrentUser();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      backgroundColor: Colors.white,
+      appBar: searchBar.build(context),
+      body: _putInBody(),
+    );
   }
 
   _getCurrentUser() async {
@@ -121,6 +129,7 @@ class _DisplaySearchState extends State<DisplaySearch> {
       "brukernavn": friendUsername,
       "uid": friendUserId
     };
+    print(data[0]);
     Firestore.instance
         .document("users/$mCurrentUser/friends/$searchedUserId")
         .setData(data)
@@ -179,12 +188,5 @@ class _DisplaySearchState extends State<DisplaySearch> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      backgroundColor: Colors.white,
-      appBar: searchBar.build(context),
-      body: _putInBody(),
-    );
-  }
+  
 }

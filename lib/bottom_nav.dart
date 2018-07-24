@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'auth.dart';
-import 'user_search.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'game_page.dart';
+import 'package:login/pages/userSearch/user_search.dart';
+
+import 'package:login/pages/group/game_page.dart';
 
 
-import 'package:flutter_search_bar/flutter_search_bar.dart';
+
 
 
 

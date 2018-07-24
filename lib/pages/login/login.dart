@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:login/widgets/primary_button.dart';
-import 'auth.dart';
+import 'package:login/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:async';
+
 
 
 class Login extends StatefulWidget {

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:login/auth.dart';
-import 'package:login/login.dart';
-import 'package:login/home_page.dart';
-import 'bottom_nav.dart';
-import 'user_search.dart';
+import 'package:login/pages/login/login.dart';
 
+import 'bottom_nav.dart';
+import 'package:login/pages/login/home_page.dart';
 
 
 class RootPage extends StatefulWidget {
@@ -21,7 +20,6 @@ enum AuthStatus {
 }
 
 class RootPageState extends State<RootPage> {
-
   String currentUser;
 
   AuthStatus authStatus = AuthStatus.notSignedIn;
@@ -30,22 +28,19 @@ class RootPageState extends State<RootPage> {
     super.initState();
     widget.auth.currentUser().then((userId) {
       setState(() {
-        authStatus = userId != null ? AuthStatus.signedIn : AuthStatus.notSignedIn;
+        authStatus =
+            userId != null ? AuthStatus.signedIn : AuthStatus.notSignedIn;
         currentUser = userId;
         debugPrint(currentUser);
       });
     });
   }
 
-
-
   void _updateAuthStatus(AuthStatus status) {
     setState(() {
       authStatus = status;
     });
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +53,8 @@ class RootPageState extends State<RootPage> {
         );
       case AuthStatus.signedIn:
         return new MyHomePage(
-          auth: widget.auth,
-          onSignOut: () => _updateAuthStatus(AuthStatus.notSignedIn)
-        );
+            auth: widget.auth,
+            onSignOut: () => _updateAuthStatus(AuthStatus.notSignedIn));
     }
   }
 }
